@@ -1,345 +1,170 @@
-
 """
-PathSnap - Preprocessing and Data Quality Diagnostics
-
-This module checks GPS observations and reference-route consistency
-before candidate generation and HMM decoding.
-
-Important:
-- Original observations are preserved by default.
-- GPS observations are never automatically sorted.
-- Suspicious GPS jumps are reported, not deleted.
-- Route discontinuities are diagnosed, not automatically repaired.
+preprocessing.py - PathSnap Coordinate Transformation and Kinematic Preprocessing
+Transforms geographic coordinates (WGS84) to local metric coordinate frames,
+computes causal trajectory kinematics (speed, heading, delta time), and prepares road network geometry.
 """
 
 import numpy as np
+from typing import Dict, Tuple, Optional
+from src.data_loader import TrajectoryData
 
 
-EARTH_RADIUS_METERS = 6_371_000
-
-
-def haversine_distance(point_a, point_b):
-    """
-    Calculate the geographic distance between two GPS coordinates.
-
-    Parameters
-    ----------
-    point_a, point_b : array-like
-        Coordinates in (longitude, latitude) order.
-
-    Returns
-    -------
-    float
-        Distance in meters.
-    """
-
-    lon1, lat1 = np.radians(point_a)
-    lon2, lat2 = np.radians(point_b)
-
-    delta_lon = lon2 - lon1
-    delta_lat = lat2 - lat1
-
-    a = (
-        np.sin(delta_lat / 2) ** 2
-        + np.cos(lat1)
-        * np.cos(lat2)
-        * np.sin(delta_lon / 2) ** 2
-    )
-
-    a = np.clip(a, 0.0, 1.0)
-
-    return float(
-        2 * EARTH_RADIUS_METERS * np.arcsin(np.sqrt(a))
-    )
-
-
-def count_consecutive_duplicates(track):
-    """
-    Count exact consecutive duplicate GPS observations.
-
-    An observation is considered an exact duplicate only when
-    longitude, latitude, and timestamp are all identical.
-    """
-
-    track = np.asarray(track)
-
-    if len(track) < 2:
-        return 0
-
-    duplicates = np.all(
-        track[1:] == track[:-1],
-        axis=1
-    )
-
-    return int(np.sum(duplicates))
-
-
-def preprocess_track(
-    track,
-    remove_consecutive_duplicates=False
-):
-    """
-    Prepare a GPS track without changing temporal ordering.
-
-    By default, this function returns a copy of the original track.
-
-    Exact consecutive duplicates can optionally be removed.
-    No sorting, interpolation, or outlier deletion is performed.
-    """
-
-    track = np.asarray(track, dtype=np.float64)
-
-    if track.ndim != 2 or track.shape[1] != 3:
-        raise ValueError(
-            "Track must have shape (number_of_points, 3)."
-        )
-
-    if not np.all(np.isfinite(track)):
-        raise ValueError(
-            "Track contains non-finite values."
-        )
-
-    processed = track.copy()
-
-    if remove_consecutive_duplicates and len(processed) > 1:
-        keep = np.ones(len(processed), dtype=bool)
-
-        keep[1:] = np.any(
-            processed[1:] != processed[:-1],
-            axis=1
-        )
-
-        processed = processed[keep]
-
-    return processed
-
-
-def inspect_gps_track(
-    track,
-    max_time_gap_seconds=120.0,
-    max_speed_mps=55.0
-):
-    """
-    Inspect GPS observations for temporal and spatial anomalies.
-
-    Large gaps and high implied speeds are diagnostic warnings.
-    They do not automatically invalidate or remove observations.
-    """
-
-    track = np.asarray(track, dtype=np.float64)
-
-    if track.ndim != 2 or track.shape[1] != 3:
-        raise ValueError(
-            "Track must have shape (number_of_points, 3)."
-        )
-
-    if not np.all(np.isfinite(track)):
-        raise ValueError(
-            "Track contains non-finite values."
-        )
-
-    if len(track) == 0:
-        raise ValueError("Track is empty.")
-
-    timestamps = track[:, 2]
-    time_differences = np.diff(timestamps)
-
-    non_monotonic_count = int(
-        np.sum(time_differences < 0)
-    )
-
-    duplicate_timestamp_count = int(
-        np.sum(time_differences == 0)
-    )
-
-    large_time_gap_indices = np.where(
-        time_differences > max_time_gap_seconds
-    )[0].tolist()
-
-    distances = []
-    implied_speeds = []
-    suspicious_speed_indices = []
-
-    for index in range(len(track) - 1):
-        point_a = track[index, :2]
-        point_b = track[index + 1, :2]
-
-        distance = haversine_distance(point_a, point_b)
-        time_difference = time_differences[index]
-
-        distances.append(distance)
-
-        if time_difference > 0:
-            speed = distance / time_difference
-            implied_speeds.append(speed)
-
-            if speed > max_speed_mps:
-                suspicious_speed_indices.append(index)
-
-    return {
-        "observation_count": int(len(track)),
-        "non_monotonic_timestamp_count": non_monotonic_count,
-        "duplicate_timestamp_count": duplicate_timestamp_count,
-        "exact_consecutive_duplicate_count":
-            count_consecutive_duplicates(track),
-        "large_time_gap_count": len(large_time_gap_indices),
-        "large_time_gap_indices": large_time_gap_indices,
-        "suspicious_speed_count": len(suspicious_speed_indices),
-        "suspicious_speed_indices": suspicious_speed_indices,
-        "maximum_observed_gap_seconds": (
-            float(np.max(time_differences))
-            if len(time_differences) else 0.0
-        ),
-        "maximum_implied_speed_mps": (
-            float(np.max(implied_speeds))
-            if implied_speeds else None
-        ),
-        "total_observed_distance_meters": float(
-            np.sum(distances)
-        ),
-    }
-
-
-def inspect_route_connectivity(arcs, route):
-    """
-    Diagnose consecutive reference-route arc connectivity.
-
-    Directed continuity:
-        previous_arc.destination == next_arc.source
-
-    Undirected continuity:
-        The two arcs share at least one endpoint.
-
-    These are diagnostics only. A discontinuity is not automatically
-    proof that the reference route is incorrect.
-    """
-
-    arcs = np.asarray(arcs)
-    route = np.asarray(route)
-
-    if arcs.ndim != 2 or arcs.shape[1] != 2:
-        raise ValueError(
-            "Arcs must have shape (number_of_arcs, 2)."
-        )
-
-    if route.ndim != 1:
-        raise ValueError("Route must be a one-dimensional array.")
-
-    directed_discontinuities = []
-    undirected_discontinuities = []
-    invalid_route_ids = []
-
-    for route_position, arc_id in enumerate(route):
-        if (
-            not np.isfinite(arc_id)
-            or arc_id != int(arc_id)
-            or arc_id < 0
-            or arc_id >= len(arcs)
-        ):
-            invalid_route_ids.append(route_position)
-
-    valid_route = [
-        int(arc_id)
-        for arc_id in route
-        if (
-            np.isfinite(arc_id)
-            and arc_id == int(arc_id)
-            and 0 <= arc_id < len(arcs)
-        )
-    ]
-
-    for position, (left_id, right_id) in enumerate(
-        zip(valid_route, valid_route[1:])
+class PreprocessedTrajectory:
+    """Encapsulates converted metric coordinates and kinematic attributes."""
+    def __init__(
+        self,
+        traj_id: str,
+        track_wgs: np.ndarray,
+        track_metric: np.ndarray,
+        timestamps: np.ndarray,
+        speeds: np.ndarray,
+        headings: np.ndarray,
+        nodes_metric: np.ndarray,
+        arcs: np.ndarray,
+        arc_u_metric: np.ndarray,
+        arc_v_metric: np.ndarray,
+        arc_mids_metric: np.ndarray,
+        arc_lengths: np.ndarray,
+        arc_headings: np.ndarray,
+        route: np.ndarray,
+        ref_lat: float,
+        ref_lon: float,
+        kinematic_mode: str = "backward"
     ):
-        left_source, left_target = arcs[left_id]
-        right_source, right_target = arcs[right_id]
+        self.traj_id = traj_id
+        self.track_wgs = track_wgs
+        self.track_metric = track_metric
+        self.timestamps = timestamps
+        self.speeds = speeds
+        self.headings = headings
+        self.nodes_metric = nodes_metric
+        self.arcs = arcs
+        self.arc_u_metric = arc_u_metric
+        self.arc_v_metric = arc_v_metric
+        self.arc_mids_metric = arc_mids_metric
+        self.arc_lengths = arc_lengths
+        self.arc_headings = arc_headings
+        self.route = route
+        self.ref_lat = ref_lat
+        self.ref_lon = ref_lon
+        self.kinematic_mode = kinematic_mode
 
-        directed_connected = left_target == right_source
+    @property
+    def num_arcs(self) -> int:
+        return len(self.arcs)
 
-        endpoints_left = {
-            left_source,
-            left_target
-        }
+    @property
+    def num_points(self) -> int:
+        return len(self.track_metric)
 
-        endpoints_right = {
-            right_source,
-            right_target
-        }
-
-        undirected_connected = bool(
-            endpoints_left.intersection(endpoints_right)
-        )
-
-        if not directed_connected:
-            directed_discontinuities.append(position)
-
-        if not undirected_connected:
-            undirected_discontinuities.append(position)
-
-    return {
-        "route_length": int(len(route)),
-        "invalid_route_id_count": len(invalid_route_ids),
-        "invalid_route_id_positions": invalid_route_ids,
-        "directed_discontinuity_count":
-            len(directed_discontinuities),
-        "directed_discontinuity_positions":
-            directed_discontinuities,
-        "undirected_discontinuity_count":
-            len(undirected_discontinuities),
-        "undirected_discontinuity_positions":
-            undirected_discontinuities,
-    }
+    @property
+    def num_nodes(self) -> int:
+        return len(self.nodes_metric)
 
 
-def inspect_trip(trip):
+def wgs84_to_metric_factors(lat_center_deg: float) -> Tuple[float, float]:
     """
-    Run GPS and route diagnostics on a loaded TripData object.
-
-    Parameters
-    ----------
-    trip : TripData
-        Object returned by data_loader.load_trip().
-
-    Returns
-    -------
-    dict
-        Structured quality report.
+    Returns meters per degree of longitude and latitude at a reference latitude.
+    Based on WGS84 ellipsoid approximations.
     """
+    lat_rad = np.radians(lat_center_deg)
+    # WGS-84 meters per degree
+    kx = 111412.84 * np.cos(lat_rad) - 93.5 * np.cos(3 * lat_rad) + 0.118 * np.cos(5 * lat_rad)
+    ky = 111132.95 - 559.82 * np.cos(2 * lat_rad) + 1.175 * np.cos(4 * lat_rad)
+    return kx, ky
 
-    gps_report = inspect_gps_track(trip.track)
 
-    route_report = inspect_route_connectivity(
-        trip.arcs,
-        trip.route
+def preprocess_trajectory(
+    data: TrajectoryData,
+    kinematic_mode: str = "backward"
+) -> PreprocessedTrajectory:
+    """
+    Preprocesses raw trajectory data:
+    1. Computes local Cartesian metric coordinates (easting/northing meters relative to trajectory center)
+    2. Calculates causal instantaneous speeds and headings for GPS track points
+       (default 'backward' difference ensures no future-observation leakage)
+    3. Precomputes arc lengths, headings, and midpoints for rapid spatial candidate generation
+    """
+    # 1. Reference origin: mean track position
+    ref_lon = float(np.mean(data.track[:, 0]))
+    ref_lat = float(np.mean(data.track[:, 1]))
+    kx, ky = wgs84_to_metric_factors(ref_lat)
+
+    # 2. Metric track coordinates: shape (N, 2) [x_m, y_m]
+    track_x = (data.track[:, 0] - ref_lon) * kx
+    track_y = (data.track[:, 1] - ref_lat) * ky
+    track_metric = np.column_stack([track_x, track_y])
+    timestamps = data.track[:, 2]
+
+    # 3. Kinematic computations: speed and heading
+    num_pts = len(track_metric)
+    speeds = np.zeros(num_pts, dtype=np.float64)
+    headings = np.zeros(num_pts, dtype=np.float64)
+
+    if num_pts > 1:
+        if kinematic_mode == "backward":
+            # Strictly causal backward difference: p_t - p_{t-1}
+            dx = np.diff(track_x)
+            dy = np.diff(track_y)
+            dt = np.diff(timestamps)
+            dt_safe = np.where(dt <= 0.0, 1.0, dt)
+            step_dists = np.hypot(dx, dy)
+            step_speeds = step_dists / dt_safe
+            step_headings = np.arctan2(dy, dx)
+
+            # Point 0 has no prior observation: assign step 0->1 values
+            speeds[0] = step_speeds[0]
+            headings[0] = step_headings[0]
+            speeds[1:] = step_speeds
+            headings[1:] = step_headings
+        else:
+            # Forward difference: p_{t+1} - p_t
+            dx = np.diff(track_x)
+            dy = np.diff(track_y)
+            dt = np.diff(timestamps)
+            dt_safe = np.where(dt <= 0.0, 1.0, dt)
+            step_dists = np.hypot(dx, dy)
+            step_speeds = step_dists / dt_safe
+            step_headings = np.arctan2(dy, dx)
+
+            speeds[:-1] = step_speeds
+            speeds[-1] = step_speeds[-1]
+            headings[:-1] = step_headings
+            headings[-1] = step_headings[-1]
+
+    # 4. Metric road network nodes: shape (M, 2)
+    nodes_x = (data.nodes[:, 0] - ref_lon) * kx
+    nodes_y = (data.nodes[:, 1] - ref_lat) * ky
+    nodes_metric = np.column_stack([nodes_x, nodes_y])
+
+    # 5. Road network arcs: vectors, lengths, headings, midpoints
+    u_idx = data.arcs[:, 0]
+    v_idx = data.arcs[:, 1]
+    arc_u_metric = nodes_metric[u_idx]
+    arc_v_metric = nodes_metric[v_idx]
+
+    arc_dx = arc_v_metric[:, 0] - arc_u_metric[:, 0]
+    arc_dy = arc_v_metric[:, 1] - arc_u_metric[:, 1]
+    arc_lengths = np.hypot(arc_dx, arc_dy)
+    arc_headings = np.arctan2(arc_dy, arc_dx)
+    arc_mids_metric = 0.5 * (arc_u_metric + arc_v_metric)
+
+    return PreprocessedTrajectory(
+        traj_id=data.traj_id,
+        track_wgs=data.track,
+        track_metric=track_metric,
+        timestamps=timestamps,
+        speeds=speeds,
+        headings=headings,
+        nodes_metric=nodes_metric,
+        arcs=data.arcs,
+        arc_u_metric=arc_u_metric,
+        arc_v_metric=arc_v_metric,
+        arc_mids_metric=arc_mids_metric,
+        arc_lengths=arc_lengths,
+        arc_headings=arc_headings,
+        route=data.route,
+        ref_lat=ref_lat,
+        ref_lon=ref_lon,
+        kinematic_mode=kinematic_mode
     )
-
-    return {
-        "trip_id": trip.trip_id,
-        "gps": gps_report,
-        "route": route_report,
-    }
-
-
-def preprocess_trip(
-    trip,
-    remove_consecutive_duplicates=False
-):
-    """
-    Return a processed copy of a trip's GPS observations.
-
-    The road graph and reference route remain unchanged.
-
-    This function does not mutate the original TripData object.
-    """
-
-    return {
-        "trip_id": trip.trip_id,
-        "track": preprocess_track(
-            trip.track,
-            remove_consecutive_duplicates=
-                remove_consecutive_duplicates
-        ),
-        "nodes": np.asarray(trip.nodes).copy(),
-        "arcs": np.asarray(trip.arcs).copy(),
-        "route": np.asarray(trip.route).copy(),
-    }

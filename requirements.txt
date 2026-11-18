@@ -16,3 +16,7 @@ uvicorn
 pydantic
 joblib
 tqdm
+xgboost
+catboost
+optuna
+

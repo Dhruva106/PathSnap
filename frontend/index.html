@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PathSnap | ML GPS Map-Matching & Evaluator Benchmark Dashboard</title>
+  
+  <!-- Leaflet Map CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  
+  <!-- Chart.js for Interactive Comparison Visualizations -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Custom Professional Geospatial Styling -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Top Application Header -->
+  <header>
+    <div class="logo-section">
+      <div class="logo-icon">&#x27A4;</div>
+      <div>
+        <div class="app-title">PathSnap</div>
+        <div class="app-subtitle">ML-Powered Vehicular GPS Map Matching & Continuous Route Reconstruction</div>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <nav class="header-nav">
+      <button id="navMapBtn" class="nav-tab active">
+        <span class="nav-icon">&#x1F5FA;&#xFE0F;</span>
+        <span>Live Map Matching</span>
+      </button>
+      <button id="navBenchmarkBtn" class="nav-tab">
+        <span class="nav-icon">&#x1F3C6;</span>
+        <span>Evaluator Benchmark & Comparison</span>
+        <span class="tab-badge" id="evalCountBadge">10 Trajs</span>
+      </button>
+    </nav>
+
+    <div class="header-badges">
+      <div class="badge">
+        <span id="statusDot" class="badge-dot online"></span>
+        <span id="statusText">API Online</span>
+      </div>
+      <div class="badge" style="border-color: var(--accent-blue);">
+        <span>&#x1F9E0;</span>
+        <span id="modelNameBadge">Baseline XGBoost</span>
+      </div>
+      <div class="badge" style="border-color: var(--accent-green);">
+        <span>&#x2714;</span>
+        <span id="modelF1Badge">Val F1: 78.8%</span>
+      </div>
+      <div id="settingsBtn" class="badge clickable" style="border-color: var(--accent-cyan);" title="Configure Backend API Base URL for Two-Laptop Setup">
+        <span>&#x2699;</span>
+        <span id="apiHostBadge">API: Localhost</span>
+      </div>
+      <div class="header-links">
+        <a href="/docs" target="_blank">&#x1F4D6; Docs</a>
+        <a href="/health" target="_blank">&#x2695; Health</a>
+        <a href="/model-info" target="_blank">&#x1F4CA; Model</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================================================== -->
+  <!-- VIEW 1: LIVE MAP MATCHING & GEOSPATIAL INSPECTOR               -->
+  <!-- ============================================================== -->
+  <div id="mapMatchingView" class="view-panel active">
+    <div class="app-container">
+
+      <!-- Left Control Sidebar -->
+      <aside class="sidebar">
+
+        <!-- Trajectory Source Selection Card -->
+        <div class="section-card">
+          <div class="section-title">&#x1F4CD; Trip Selection</div>
+          
+          <div class="form-group">
+            <label for="trajectorySelect">Choose Trajectory:</label>
+            <select id="trajectorySelect">
+              <optgroup label="Validation Trajectories" id="valOptGroup">
+                <option value="00000001">00000001 (VAL)</option>
+                <option value="00000084">00000084 (VAL)</option>
+              </optgroup>
+              <optgroup label="Evaluator Dataset (Official)" id="evalOptGroup">
+                <option value="00000015">00000015 (EVAL - 6,854 pts)</option>
+                <option value="00000017">00000017 (EVAL)</option>
+                <option value="00000023">00000023 (EVAL)</option>
+                <option value="00000030">00000030 (EVAL)</option>
+                <option value="00000049">00000049 (EVAL - 99.5% Acc)</option>
+                <option value="00000059">00000059 (EVAL)</option>
+                <option value="00000067">00000067 (EVAL)</option>
+                <option value="00000073">00000073 (EVAL)</option>
+                <option value="00000087">00000087 (EVAL - 99.0% Acc)</option>
+                <option value="00000094">00000094 (EVAL)</option>
+              </optgroup>
+              <optgroup label="Student Test Trajectories" id="testOptGroup">
+                <option value="00000000">00000000 (TEST)</option>
+                <option value="00000052">00000052 (TEST)</option>
+              </optgroup>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Quick Benchmarks:</label>
+            <div class="quick-buttons">
+              <button class="quick-btn" data-tid="00000015">
+                <strong style="color: var(--accent-cyan);">00000015</strong> (Eval)
+                <span class="btn-sub">6.8k pts &bull; +25.4% HMM</span>
+              </button>
+              <button class="quick-btn" data-tid="00000049">
+                <strong style="color: var(--accent-cyan);">00000049</strong> (Eval)
+                <span class="btn-sub">2.6k pts &bull; 99.5% Acc</span>
+              </button>
+              <button class="quick-btn" data-tid="00000087">
+                <strong style="color: var(--accent-cyan);">00000087</strong> (Eval)
+                <span class="btn-sub">1.4k pts &bull; 100% Conn</span>
+              </button>
+              <button class="quick-btn" data-tid="00000084">
+                <strong>00000084</strong> (Val)
+                <span class="btn-sub">16k pts &bull; +18.4% HMM</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-top: 4px;">
+            <label for="fileUpload">Upload Custom GPS (.track):</label>
+            <input type="file" id="fileUpload" accept=".track,.txt,.csv" style="font-size: 11px; color: var(--text-secondary);">
+          </div>
+        </div>
+
+        <!-- Trajectory Metadata Preview Card -->
+        <div class="section-card" id="trajInfoCard">
+          <div class="section-title">&#x1F6C8; Trip Information</div>
+          <div style="font-size: 11px; color: var(--text-secondary); display: flex; flex-direction: column; gap: 4px;">
+            <div style="display: flex; justify-content: space-between;">
+              <span>Selected Trip:</span>
+              <strong id="infoTrajId" style="color: var(--accent-cyan);">00000015</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span>Split Category:</span>
+              <span id="infoSplit" style="text-transform: uppercase;">Evaluator Test</span>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span>GPS Points:</span>
+              <strong id="infoPointCount">6,854</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span>Duration:</span>
+              <span id="infoDuration">--</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Algorithm Configuration Card -->
+        <div class="section-card">
+          <div class="section-title">&#x2699; Algorithm Parameters</div>
+
+          <div class="form-group">
+            <label>Sequence Decoding Mode:</label>
+            <div class="toggle-group">
+              <div id="hmmToggle" class="toggle-option active">
+                HMM Viterbi (Global)
+              </div>
+              <div id="top1Toggle" class="toggle-option">
+                Top-1 ML (Pointwise)
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="searchRadius">
+              <span>Spatial Search Radius:</span>
+              <span id="searchRadiusVal" class="range-val">50m</span>
+            </label>
+            <div class="range-slider-container">
+              <input type="range" id="searchRadius" min="15" max="120" step="5" value="50">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="maxCandidates">
+              <span>Max Candidates / Point:</span>
+              <span id="maxCandidatesVal" class="range-val">25</span>
+            </label>
+            <div class="range-slider-container">
+              <input type="range" id="maxCandidates" min="5" max="40" step="1" value="25">
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <button id="runBtn" class="btn-primary" style="margin-top: 6px;">
+            <span id="runBtnSpinner" class="spinner" style="display: none;"></span>
+            <span id="runBtnText">&#x25B6; Run Map Matching</span>
+          </button>
+
+          <button id="evalBtn" class="btn-evaluate" style="margin-top: 4px;" disabled title="Run Map Matching first to enable evaluation">
+            <span id="evalBtnSpinner" class="spinner" style="display: none;"></span>
+            <span id="evalBtnText">&#x1F3AF; Evaluate Against Ground Truth</span>
+          </button>
+        </div>
+
+      </aside>
+
+      <!-- Main Map Viewport -->
+      <main class="main-content">
+
+        <!-- Floating Map Legend -->
+        <div class="map-legend">
+          <div class="legend-title">Geospatial Layers</div>
+          <label class="legend-item">
+            <input type="checkbox" id="toggleRoute" checked>
+            <div class="legend-color-line line-route"></div>
+            <span>PathSnap Reconstructed Route</span>
+          </label>
+          <label class="legend-item">
+            <input type="checkbox" id="toggleGps" checked>
+            <div class="legend-color-line line-gps"></div>
+            <span>Raw GPS Track</span>
+          </label>
+          <label class="legend-item">
+            <input type="checkbox" id="toggleSnapped" checked>
+            <div class="legend-color-point point-matched"></div>
+            <span>Snapped Projections</span>
+          </label>
+          <label class="legend-item" id="gtLayerLabel" style="opacity: 0.5;">
+            <input type="checkbox" id="toggleGroundTruth" checked disabled>
+            <div class="legend-color-line line-gt"></div>
+            <span>Ground Truth Route (.route)</span>
+          </label>
+          <label class="legend-item" id="teammateLayerLabel" style="opacity: 0.5;">
+            <input type="checkbox" id="toggleTeammate" checked disabled>
+            <div class="legend-color-line" style="background: #f59e0b; border-top: 2px dashed #f59e0b;"></div>
+            <span>Teammate Route(s)</span>
+          </label>
+        </div>
+
+        <!-- Leaflet Map Container -->
+        <div id="map"></div>
+
+        <!-- Collapsible Bottom Point Inspector Drawer -->
+        <div id="bottomDrawer" class="bottom-drawer collapsed">
+          <div id="drawerToggle" class="drawer-header">
+            <span>&#x1F50D; Point-by-Point Observation Inspector (Click any row to inspect & highlight on map)</span>
+            <span>Toggle View &#x25B2;&#x25BC;</span>
+          </div>
+          <div class="drawer-body">
+            <table class="inspection-table">
+              <thead>
+                <tr>
+                  <th>Pt #</th>
+                  <th>Raw GPS (Lat, Lon)</th>
+                  <th>Snapped Projection (Lat, Lon)</th>
+                  <th>Matched Arc ID</th>
+                  <th>Snapping Error</th>
+                  <th>ML Confidence</th>
+                  <th>Candidates</th>
+                </tr>
+              </thead>
+              <tbody id="inspectionBody">
+                <tr>
+                  <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 10px;">
+                    Execute map matching to inspect point snapping data.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </main>
+
+      <!-- Right Evaluation & Analytics Panel -->
+      <aside class="right-panel">
+
+        <!-- Match Statistics Card -->
+        <div class="section-card">
+          <div class="section-title">&#x1F4CA; Map Match Metrics</div>
+
+          <div class="stats-grid">
+            <div class="stat-box">
+              <div class="stat-label">GPS Observations</div>
+              <div id="statPoints" class="stat-value">--</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">Route Length</div>
+              <div id="statLength" class="stat-value">--</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">Route Arcs</div>
+              <div id="statArcs" class="stat-value">--</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">Connectivity</div>
+              <div id="statConnectivity" class="stat-value green">--</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">Inference Latency</div>
+              <div id="statTime" class="stat-value">--</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">Sequence Method</div>
+              <div id="statMethod" class="stat-value" style="font-size: 11px;">HMM Viterbi</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Server-Side Ground Truth Evaluation Card -->
+        <div class="section-card" id="evalCard" style="border-color: rgba(168, 85, 247, 0.4);">
+          <div class="section-title" style="color: var(--accent-purple);">&#x1F3AF; Ground-Truth Evaluation</div>
+          
+          <div id="evalPlaceholder" style="font-size: 11px; color: var(--text-muted); padding: 6px 0;">
+            Run map matching and click <strong>Evaluate Route</strong> to compute accuracy against ground truth (.route).
+          </div>
+
+          <div id="evalContent" style="display: none; flex-direction: column; gap: 8px;">
+            <div class="stats-grid">
+              <div class="stat-box" style="border-color: rgba(168, 85, 247, 0.4);">
+                <div class="stat-label">Point Accuracy</div>
+                <div id="evalPointAcc" class="stat-value purple">--%</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-label">Top-1 ML Acc</div>
+                <div id="evalTop1Acc" class="stat-value">--%</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-label">HMM Gain</div>
+                <div id="evalGain" class="stat-value green">+--%</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-label">Candidate Recall</div>
+                <div id="evalCandRecall" class="stat-value cyan">--%</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-label">Route Precision</div>
+                <div id="evalRoutePrec" class="stat-value">--%</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-label">Route Recall</div>
+                <div id="evalRouteRec" class="stat-value">--%</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-label">Route F1-Score</div>
+                <div id="evalRouteF1" class="stat-value green">--%</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-label">Jaccard Overlap</div>
+                <div id="evalJaccard" class="stat-value purple">--%</div>
+              </div>
+            </div>
+
+            <div style="font-size: 10px; color: var(--text-secondary); background: var(--bg-primary); padding: 6px 8px; border-radius: 4px; border: 1px solid var(--border-color);">
+              <div style="display: flex; justify-content: space-between;">
+                <span>GT Route Arcs:</span>
+                <strong id="evalGtArcs">--</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span>Predicted Route Arcs:</span>
+                <strong id="evalPredArcs">--</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span>Evaluation Latency:</span>
+                <span id="evalTime">-- s</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Architectural Methodology Note -->
+        <div class="section-card" style="font-size: 11px; line-height: 1.4; color: var(--text-secondary);">
+          <strong style="color: var(--accent-cyan); display: block; margin-bottom: 3px;">&#x1F6E1; Sequence Architecture</strong>
+          Pointwise XGBoost scores candidate road arcs using 14 kinematic-spatial features. Newson-Krumm HMM Viterbi decoding enforces topological road network continuity, completely eliminating parallel-road hopping.
+        </div>
+
+      </aside>
+
+    </div>
+  </div>
+
+  <!-- ============================================================== -->
+  <!-- VIEW 2: EVALUATOR BENCHMARK & TEAMMATE COMPARISON              -->
+  <!-- ============================================================== -->
+  <div id="benchmarkView" class="view-panel" style="display: none;">
+    <div class="benchmark-container">
+
+      <!-- Top KPI Overview Header Cards -->
+      <div class="benchmark-kpis">
+        <div class="kpi-card">
+          <div class="kpi-icon">&#x1F4CB;</div>
+          <div class="kpi-content">
+            <div class="kpi-label">Evaluator Trajectories</div>
+            <div class="kpi-value">10 Trips</div>
+            <div class="kpi-sub">19,674 GPS Fixes &bull; 100% Valid</div>
+          </div>
+        </div>
+
+        <div class="kpi-card" style="border-color: rgba(56, 189, 248, 0.4);">
+          <div class="kpi-icon">&#x1F3AF;</div>
+          <div class="kpi-content">
+            <div class="kpi-label">PathSnap Accuracy</div>
+            <div class="kpi-value cyan" id="kpiMacroAcc">91.44%</div>
+            <div class="kpi-sub">Macro: 91.44% &bull; Pooled: 87.68%</div>
+          </div>
+        </div>
+
+        <div class="kpi-card" style="border-color: rgba(16, 185, 129, 0.4);">
+          <div class="kpi-icon">&#x1F947;</div>
+          <div class="kpi-content">
+            <div class="kpi-label">PathSnap Route F1</div>
+            <div class="kpi-value green" id="kpiMacroF1">91.95%</div>
+            <div class="kpi-sub">Route Jaccard Overlap: 86.47%</div>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon">&#x1F517;</div>
+          <div class="kpi-content">
+            <div class="kpi-label">Route Continuity</div>
+            <div class="kpi-value" id="kpiMacroConn">99.11%</div>
+            <div class="kpi-sub">Cand. Recall: 99.99% (19.6k pts)</div>
+          </div>
+        </div>
+
+        <div class="kpi-card" style="border-color: rgba(245, 158, 11, 0.4);">
+          <div class="kpi-icon">&#x1F465;</div>
+          <div class="kpi-content">
+            <div class="kpi-label">Systems Compared</div>
+            <div class="kpi-value amber" id="kpiImplCount">1 System</div>
+            <div class="kpi-sub" id="kpiBestImpl">Leader: PathSnap (XGBoost)</div>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon">&#x26A1;</div>
+          <div class="kpi-content">
+            <div class="kpi-label">Inference Latency</div>
+            <div class="kpi-value" id="kpiAvgTime">5.46 s</div>
+            <div class="kpi-sub">&lt; 2.8 ms / GPS point</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Control Toolbar & Filter Row -->
+      <div class="benchmark-toolbar">
+        <div class="toolbar-left">
+          <div class="filter-group">
+            <label for="benchTrajFilter">Trajectory Filter:</label>
+            <select id="benchTrajFilter" class="toolbar-select">
+              <option value="ALL">All 10 Evaluator Trajectories</option>
+              <option value="00000015">00000015 (6,854 pts)</option>
+              <option value="00000017">00000017 (1,346 pts)</option>
+              <option value="00000023">00000023 (458 pts)</option>
+              <option value="00000030">00000030 (654 pts)</option>
+              <option value="00000049">00000049 (2,642 pts)</option>
+              <option value="00000059">00000059 (1,031 pts)</option>
+              <option value="00000067">00000067 (916 pts)</option>
+              <option value="00000073">00000073 (1,144 pts)</option>
+              <option value="00000087">00000087 (1,399 pts)</option>
+              <option value="00000094">00000094 (3,230 pts)</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label for="benchImplFilter">Implementation Filter:</label>
+            <select id="benchImplFilter" class="toolbar-select">
+              <option value="ALL">All Available Systems</option>
+              <option value="PathSnap (Champion XGBoost + HMM)">PathSnap (Champion XGBoost + HMM)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="toolbar-right">
+          <button id="importTeammateBtn" class="btn-primary" style="padding: 6px 14px; font-size: 12px;">
+            <span>&#x1F4E5;</span>
+            <span>Import Teammate Results</span>
+          </button>
+          <a href="/comparison/template?format=csv" download class="toolbar-btn" title="Download CSV template for teammates">
+            <span>&#x1F4C4; CSV Template</span>
+          </a>
+          <a href="/comparison/template?format=json" download class="toolbar-btn" title="Download JSON template for teammates">
+            <span>&#x1F4CA; JSON Template</span>
+          </a>
+          <button id="refreshBenchmarkBtn" class="toolbar-btn" title="Reload Evaluator Benchmarks">
+            <span>&#x1F504;</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Charts Section (Phase 8 Visualizations) -->
+      <div class="benchmark-charts-grid">
+        
+        <!-- Chart 1: F1-Score Comparison -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <div class="chart-title">&#x1F4CA; Chart 1: Route F1-Score Across Evaluator Trajectories</div>
+            <div class="chart-tag">Set F1 Measure</div>
+          </div>
+          <div class="chart-canvas-container">
+            <canvas id="chartF1"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 2: Point-Wise Accuracy Comparison -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <div class="chart-title">&#x1F3AF; Chart 2: Point-Wise Accuracy (Top-1 ML vs. HMM Viterbi)</div>
+            <div class="chart-tag">Sequence Gain</div>
+          </div>
+          <div class="chart-canvas-container">
+            <canvas id="chartAccuracy"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 3: Multi-Metric Radar/Bar Overview -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <div class="chart-title">&#x1F578;&#xFE0F; Chart 3: Multi-Metric Performance by Trajectory</div>
+            <div class="chart-tag">Precision, Recall & Jaccard</div>
+          </div>
+          <div class="chart-canvas-container">
+            <canvas id="chartRadar"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 4: Computational Latency -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <div class="chart-title">&#x23F1;&#xFE0F; Chart 4: Inference & Route Reconstruction Latency</div>
+            <div class="chart-tag">Processing Time (s)</div>
+          </div>
+          <div class="chart-canvas-container">
+            <canvas id="chartLatency"></canvas>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Comparison Matrix Table Card (Phase 7) -->
+      <div class="section-card" style="margin-top: 14px; overflow: hidden;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+          <div>
+            <div class="section-title">&#x1F3C6; Trajectory-Level Implementation Comparison Matrix</div>
+            <div style="font-size: 11px; color: var(--text-secondary);">
+              Sort and compare PathSnap against teammate submissions. Best performing metric per trip is highlighted.
+            </div>
+          </div>
+          <div id="tableStatusText" style="font-size: 11px; color: var(--text-muted);">
+            Displaying 10 evaluator records
+          </div>
+        </div>
+
+        <div class="comparison-table-wrapper">
+          <table class="benchmark-table" id="benchmarkTable">
+            <thead>
+              <tr>
+                <th data-sort="trajectory_id">Trip ID &#x25B2;&#x25BC;</th>
+                <th data-sort="implementation_name">Implementation &#x25B2;&#x25BC;</th>
+                <th data-sort="accuracy">Point Acc (%) &#x25B2;&#x25BC;</th>
+                <th data-sort="precision">Precision (%) &#x25B2;&#x25BC;</th>
+                <th data-sort="recall">Recall (%) &#x25B2;&#x25BC;</th>
+                <th data-sort="f1_score">F1-Score (%) &#x25B2;&#x25BC;</th>
+                <th data-sort="candidate_recall">Cand Recall (%) &#x25B2;&#x25BC;</th>
+                <th data-sort="route_continuity">Continuity (%) &#x25B2;&#x25BC;</th>
+                <th data-sort="route_agreement">Jaccard (%) &#x25B2;&#x25BC;</th>
+                <th data-sort="processing_time_seconds">Time (s) &#x25B2;&#x25BC;</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="benchmarkTableBody">
+              <tr>
+                <td colspan="11" style="text-align: center; color: var(--text-muted); padding: 14px;">
+                  Loading official evaluator benchmarks...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================== -->
+  <!-- MODAL: IMPORT TEAMMATE BENCHMARKS (PHASE 6 & 10)               -->
+  <!-- ============================================================== -->
+  <div id="importModal" class="modal-overlay">
+    <div class="modal-card" style="max-width: 620px;">
+      <div class="modal-header">
+        <div class="modal-title">&#x1F4E5; Import Teammate Results & Route Predictions</div>
+        <button id="importModalCloseBtn" class="modal-close">&times;</button>
+      </div>
+      
+      <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 10px;">
+        Import your teammate's benchmark results via CSV or JSON. If route arc sequences are submitted, PathSnap's exact evaluation logic will evaluate their route against ground truth for a 100% fair comparison.
+      </p>
+
+      <!-- Import Mode Tabs -->
+      <div class="toggle-group" style="margin-bottom: 12px;">
+        <div id="tabUploadFile" class="toggle-option active">Upload File (.csv / .json)</div>
+        <div id="tabPasteJson" class="toggle-option">Paste JSON Records</div>
+      </div>
+
+      <!-- File Upload Container -->
+      <div id="fileUploadContainer">
+        <div class="drop-zone" id="dropZone">
+          <div style="font-size: 28px; margin-bottom: 6px;">&#x1F4C1;</div>
+          <div style="font-size: 13px; font-weight: 600;">Drag & Drop Teammate Result File Here</div>
+          <div style="font-size: 11px; color: var(--text-muted); margin: 4px 0 10px 0;">Accepts .csv or .json formatted according to schema</div>
+          <input type="file" id="teammateFileInput" accept=".csv,.json,.txt" style="display: none;">
+          <button type="button" id="browseFileBtn" class="quick-btn" style="padding: 6px 14px;">Browse Computer</button>
+        </div>
+        <div id="selectedFileName" style="font-size: 11px; color: var(--accent-cyan); margin-top: 6px; display: none;"></div>
+      </div>
+
+      <!-- JSON Paste Container -->
+      <div id="pasteJsonContainer" style="display: none;">
+        <label for="jsonTextarea" style="font-size: 11px; color: var(--text-secondary); display: block; margin-bottom: 4px;">
+          Paste JSON payload (array of records or <code>{"records": [...]}</code>):
+        </label>
+        <textarea id="jsonTextarea" rows="8" placeholder='[
+  {
+    "implementation_name": "Teammate Model A",
+    "trajectory_id": "00000015",
+    "accuracy": 82.5,
+    "f1_score": 79.2,
+    "route_continuity": 98.4,
+    "processing_time_seconds": 3.4
+  }
+]' style="width: 100%; background: var(--bg-primary); border: 1px solid var(--border-color); color: var(--text-primary); font-family: monospace; font-size: 11px; padding: 8px; border-radius: 6px; resize: vertical;"></textarea>
+      </div>
+
+      <!-- Feedback / Error Console -->
+      <div id="importFeedback" style="display: none; margin-top: 10px; padding: 8px 10px; border-radius: 6px; font-size: 11px;"></div>
+
+      <!-- Modal Footer -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px; border-top: 1px solid var(--border-color); padding-top: 10px;">
+        <div style="display: flex; gap: 8px;">
+          <a href="/comparison/template?format=csv" download class="quick-btn" style="padding: 4px 10px; font-size: 11px;">&#x1F4C4; Template.csv</a>
+          <a href="/comparison/template?format=json" download class="quick-btn" style="padding: 4px 10px; font-size: 11px;">&#x1F4CA; Template.json</a>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button id="importCancelBtn" class="quick-btn" style="padding: 6px 12px;">Cancel</button>
+          <button id="importSubmitBtn" class="btn-primary" style="padding: 6px 16px; font-size: 12px;">Import Benchmark</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================== -->
+  <!-- MODAL: BACKEND API SETTINGS (TWO-LAPTOP EVALUATION)            -->
+  <!-- ============================================================== -->
+  <div id="settingsModal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">&#x2699; Backend API Server Configuration</div>
+        <button id="modalCloseBtn" class="modal-close">&times;</button>
+      </div>
+      <p style="font-size: 12px; color: var(--text-secondary);">
+        Configure the backend API address. For single-laptop usage, leave blank or use current origin. For two-laptop evaluation, enter Laptop 1's LAN IP (e.g. <code>http://10.220.230.229:8000</code>).
+      </p>
+      <div class="form-group">
+        <label for="apiUrlInput">API Base URL:</label>
+        <input type="text" id="apiUrlInput" placeholder="e.g. http://10.220.230.229:8000">
+      </div>
+      <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 8px;">
+        <button id="modalResetBtn" class="quick-btn" style="padding: 6px 12px;">Reset to Origin</button>
+        <button id="modalSaveBtn" class="btn-primary" style="padding: 6px 14px; font-size: 12px;">Save & Reconnect</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Leaflet Map JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  
+  <!-- PathSnap Custom Dashboard Scripts -->
+  <script src="js/map.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
