@@ -1,0 +1,15 @@
+[
+  {
+    "implementation_name": "Test Teammate Model",
+    "trajectory_id": "00000023",
+    "accuracy": 6.78,
+    "precision": 100.0,
+    "recall": 6.78,
+    "f1_score": 12.7,
+    "candidate_recall": null,
+    "route_continuity": 100.0,
+    "route_agreement": 6.78,
+    "processing_time_seconds": 0.8,
+    "notes": "Evaluated from submitted route arc sequence"
+  }
+]

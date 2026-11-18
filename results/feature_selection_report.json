@@ -1,0 +1,54 @@
+{
+  "candidate_features": [
+    "dist_to_segment",
+    "dist_to_u",
+    "dist_to_v",
+    "dist_to_midpoint",
+    "arc_length",
+    "proj_ratio",
+    "heading_diff_deg",
+    "speed",
+    "dist_rank",
+    "relative_dist",
+    "delta_x",
+    "delta_y",
+    "dist_sq",
+    "log_dist",
+    "heading_cos",
+    "min_node_dist",
+    "node_asymmetry"
+  ],
+  "selected_features": [
+    "dist_to_segment",
+    "dist_to_u",
+    "dist_to_v",
+    "dist_to_midpoint",
+    "arc_length",
+    "proj_ratio",
+    "speed",
+    "dist_rank",
+    "relative_dist",
+    "delta_x",
+    "delta_y",
+    "heading_cos",
+    "min_node_dist",
+    "node_asymmetry"
+  ],
+  "removed_features": [
+    {
+      "feature": "dist_sq",
+      "stage": "Correlation Analysis",
+      "reason": "High collinearity with 'dist_to_segment' (|r| = 0.869 >= 0.85); 'dist_to_segment' retained due to higher MI score"
+    },
+    {
+      "feature": "log_dist",
+      "stage": "Correlation Analysis",
+      "reason": "High collinearity with 'dist_to_segment' (|r| = 0.868 >= 0.85); 'dist_to_segment' retained due to higher MI score"
+    },
+    {
+      "feature": "heading_diff_deg",
+      "stage": "Correlation Analysis",
+      "reason": "High collinearity with 'heading_cos' (|r| = 0.993 >= 0.85); 'heading_cos' retained due to higher MI score"
+    }
+  ]
+}

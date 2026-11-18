@@ -1,0 +1,105 @@
+{
+  "all_valid": true,
+  "trajectories": [
+    {
+      "traj_id": "00000015",
+      "valid": true,
+      "issues": [],
+      "num_track_points": 6854,
+      "num_nodes": 1571,
+      "num_arcs": 3225,
+      "num_route_arcs": 136,
+      "time_span_sec": 6853.0
+    },
+    {
+      "traj_id": "00000017",
+      "valid": true,
+      "issues": [],
+      "num_track_points": 1346,
+      "num_nodes": 36724,
+      "num_arcs": 76425,
+      "num_route_arcs": 795,
+      "time_span_sec": 1400.0
+    },
+    {
+      "traj_id": "00000023",
+      "valid": true,
+      "issues": [],
+      "num_track_points": 458,
+      "num_nodes": 5053,
+      "num_arcs": 10596,
+      "num_route_arcs": 59,
+      "time_span_sec": 457.0
+    },
+    {
+      "traj_id": "00000030",
+      "valid": true,
+      "issues": [],
+      "num_track_points": 654,
+      "num_nodes": 13223,
+      "num_arcs": 24218,
+      "num_route_arcs": 337,
+      "time_span_sec": 666.0
+    },
+    {
+      "traj_id": "00000049",
+      "valid": true,
+      "issues": [],
+      "num_track_points": 2642,
+      "num_nodes": 23165,
+      "num_arcs": 47542,
+      "num_route_arcs": 410,
+      "time_span_sec": 2642.0
+    },
+    {
+      "traj_id": "00000059",
+      "valid": true,
+      "issues": [],
+      "num_track_points": 1031,
+      "num_nodes": 12631,
+      "num_arcs": 24024,
+      "num_route_arcs": 455,
+      "time_span_sec": 1054.0
+    },
+    {
+      "traj_id": "00000067",
+      "valid": true,
+      "issues": [],
+      "num_track_points": 916,
+      "num_nodes": 2265,
+      "num_arcs": 4485,
+      "num_route_arcs": 82,
+      "time_span_sec": 944.0
+    },
+    {
+      "traj_id": "00000073",
+      "valid": true,
+      "issues": [],
+      "num_track_points": 1144,
+      "num_nodes": 12151,
+      "num_arcs": 25631,
+      "num_route_arcs": 238,
+      "time_span_sec": 1734.0
+    },
+    {
+      "traj_id": "00000087",
+      "valid": true,
+      "issues": [],
+      "num_track_points": 1399,
+      "num_nodes": 55234,
+      "num_arcs": 107451,
+      "num_route_arcs": 455,
+      "time_span_sec": 1402.0
+    },
+    {
+      "traj_id": "00000094",
+      "valid": true,
+      "issues": [],
+      "num_track_points": 3230,
+      "num_nodes": 6815,
+      "num_arcs": 14931,
+      "num_route_arcs": 604,
+      "time_span_sec": 3234.0
+    }
+  ]
+}

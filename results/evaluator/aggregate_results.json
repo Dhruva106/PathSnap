@@ -1,0 +1,31 @@
+{
+  "dataset_name": "Official Evaluator Test Trajectories",
+  "num_trajectories": 10,
+  "total_gps_observations": 19674,
+  "successful_trajectories": 10,
+  "failed_trajectories": 0,
+  "champion_model": "Baseline XGBoost",
+  "macro_metrics_across_trajectories": {
+    "mean_point_wise_accuracy_pct": 91.44,
+    "mean_top1_ml_accuracy_pct": 83.86,
+    "mean_hmm_improvement_pct": 7.57,
+    "mean_candidate_recall_pct": 99.99,
+    "mean_route_precision_pct": 86.83,
+    "mean_route_recall_pct": 99.58,
+    "mean_route_f1_score_pct": 91.95,
+    "mean_route_jaccard_overlap_pct": 86.47,
+    "mean_topological_connectivity_pct": 99.11,
+    "total_processing_time_sec": 54.58,
+    "average_processing_time_sec": 5.458
+  },
+  "pooled_metrics_across_observations": {
+    "pooled_point_wise_accuracy_pct": 87.68,
+    "pooled_top1_ml_accuracy_pct": 75.13,
+    "pooled_hmm_improvement_pct": 12.54,
+    "pooled_candidate_recall_pct": 99.99,
+    "total_evaluated_points": 19674,
+    "total_hmm_matches": 17250,
+    "total_top1_matches": 14782,
+    "total_cand_recall_hits": 19672
+  }
+}

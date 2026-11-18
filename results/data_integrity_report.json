@@ -1,0 +1,802 @@
+[
+  {
+    "traj_id": "00000001",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 1315,
+    "num_nodes": 88809,
+    "num_arcs": 165790,
+    "num_route_arcs": 525,
+    "time_span_sec": 1357.0
+  },
+  {
+    "traj_id": "00000002",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 7243,
+    "num_nodes": 7936,
+    "num_arcs": 16139,
+    "num_route_arcs": 262,
+    "time_span_sec": 8933.156
+  },
+  {
+    "traj_id": "00000003",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 821,
+    "num_nodes": 9138,
+    "num_arcs": 18028,
+    "num_route_arcs": 79,
+    "time_span_sec": 823.0
+  },
+  {
+    "traj_id": "00000004",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 1064,
+    "num_nodes": 7350,
+    "num_arcs": 15499,
+    "num_route_arcs": 320,
+    "time_span_sec": 5217.0
+  },
+  {
+    "traj_id": "00000005",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 1045,
+    "num_nodes": 898,
+    "num_arcs": 1579,
+    "num_route_arcs": 105,
+    "time_span_sec": 1044.0
+  },
+  {
+    "traj_id": "00000006",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 1450,
+    "num_nodes": 3259,
+    "num_arcs": 6757,
+    "num_route_arcs": 261,
+    "time_span_sec": 2102.0
+  },
+  {
+    "traj_id": "00000008",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 3093,
+    "num_nodes": 4995,
+    "num_arcs": 10421,
+    "num_route_arcs": 173,
+    "time_span_sec": 3093.0
+  },
+  {
+    "traj_id": "00000010",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 2711,
+    "num_nodes": 8502,
+    "num_arcs": 15715,
+    "num_route_arcs": 210,
+    "time_span_sec": 2710.0
+  },
+  {
+    "traj_id": "00000011",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 2828,
+    "num_nodes": 2649,
+    "num_arcs": 5393,
+    "num_route_arcs": 565,
+    "time_span_sec": 3735.0
+  },
+  {
+    "traj_id": "00000012",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 1608,
+    "num_nodes": 16376,
+    "num_arcs": 38599,
+    "num_route_arcs": 205,
+    "time_span_sec": 1608.0
+  },
+  {
+    "traj_id": "00000013",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 2580,
+    "num_nodes": 155003,
+    "num_arcs": 307392,
+    "num_route_arcs": 788,
+    "time_span_sec": 2832.0
+  },
+  {
+    "traj_id": "00000014",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 448,
+    "num_nodes": 4067,
+    "num_arcs": 8288,
+    "num_route_arcs": 164,
+    "time_span_sec": 718.0
+  },
+  {
+    "traj_id": "00000016",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 1305,
+    "num_nodes": 8205,
+    "num_arcs": 15098,
+    "num_route_arcs": 204,
+    "time_span_sec": 1304.0
+  },
+  {
+    "traj_id": "00000018",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 379,
+    "num_nodes": 5980,
+    "num_arcs": 11545,
+    "num_route_arcs": 166,
+    "time_span_sec": 451.0
+  },
+  {
+    "traj_id": "00000019",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 2354,
+    "num_nodes": 52694,
+    "num_arcs": 108517,
+    "num_route_arcs": 545,
+    "time_span_sec": 2353.0
+  },
+  {
+    "traj_id": "00000020",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 2353,
+    "num_nodes": 2739,
+    "num_arcs": 5958,
+    "num_route_arcs": 142,
+    "time_span_sec": 2352.0
+  },
+  {
+    "traj_id": "00000021",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 15783,
+    "num_nodes": 732,
+    "num_arcs": 1510,
+    "num_route_arcs": 277,
+    "time_span_sec": 18605.0
+  },
+  {
+    "traj_id": "00000022",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 474,
+    "num_nodes": 9607,
+    "num_arcs": 18982,
+    "num_route_arcs": 376,
+    "time_span_sec": 1437.0
+  },
+  {
+    "traj_id": "00000024",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 801,
+    "num_nodes": 25782,
+    "num_arcs": 51609,
+    "num_route_arcs": 249,
+    "time_span_sec": 1541.0
+  },
+  {
+    "traj_id": "00000025",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 1179,
+    "num_nodes": 38035,
+    "num_arcs": 85639,
+    "num_route_arcs": 283,
+    "time_span_sec": 1539.0
+  },
+  {
+    "traj_id": "00000026",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 361,
+    "num_nodes": 2580,
+    "num_arcs": 5043,
+    "num_route_arcs": 197,
+    "time_span_sec": 893.0
+  },
+  {
+    "traj_id": "00000027",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 694,
+    "num_nodes": 2756,
+    "num_arcs": 5588,
+    "num_route_arcs": 138,
+    "time_span_sec": 707.0
+  },
+  {
+    "traj_id": "00000028",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 3565,
+    "num_nodes": 60628,
+    "num_arcs": 127216,
+    "num_route_arcs": 618,
+    "time_span_sec": 4134.0
+  },
+  {
+    "traj_id": "00000029",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 733,
+    "num_nodes": 10825,
+    "num_arcs": 20868,
+    "num_route_arcs": 204,
+    "time_span_sec": 732.0
+  },
+  {
+    "traj_id": "00000031",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 4245,
+    "num_nodes": 59059,
+    "num_arcs": 125831,
+    "num_route_arcs": 432,
+    "time_span_sec": 4244.0
+  },
+  {
+    "traj_id": "00000032",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 2464,
+    "num_nodes": 124540,
+    "num_arcs": 259437,
+    "num_route_arcs": 819,
+    "time_span_sec": 2828.0
+  },
+  {
+    "traj_id": "00000033",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 5844,
+    "num_nodes": 3340,
+    "num_arcs": 6360,
+    "num_route_arcs": 169,
+    "time_span_sec": 6252.0
+  },
+  {
+    "traj_id": "00000034",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 3614,
+    "num_nodes": 19597,
+    "num_arcs": 40971,
+    "num_route_arcs": 454,
+    "time_span_sec": 3855.0
+  },
+  {
+    "traj_id": "00000035",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 1643,
+    "num_nodes": 21126,
+    "num_arcs": 35212,
+    "num_route_arcs": 403,
+    "time_span_sec": 1642.0
+  },
+  {
+    "traj_id": "00000036",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 1368,
+    "num_nodes": 4528,
+    "num_arcs": 9619,
+    "num_route_arcs": 156,
+    "time_span_sec": 1367.0
+  },
+  {
+    "traj_id": "00000037",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 677,
+    "num_nodes": 9472,
+    "num_arcs": 21744,
+    "num_route_arcs": 163,
+    "time_span_sec": 933.0
+  },
+  {
+    "traj_id": "00000038",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 1287,
+    "num_nodes": 21046,
+    "num_arcs": 42026,
+    "num_route_arcs": 221,
+    "time_span_sec": 1451.0
+  },
+  {
+    "traj_id": "00000039",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 363,
+    "num_nodes": 1185,
+    "num_arcs": 2388,
+    "num_route_arcs": 161,
+    "time_span_sec": 886.0
+  },
+  {
+    "traj_id": "00000041",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 1019,
+    "num_nodes": 7837,
+    "num_arcs": 14317,
+    "num_route_arcs": 340,
+    "time_span_sec": 1120.0
+  },
+  {
+    "traj_id": "00000042",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 7739,
+    "num_nodes": 49376,
+    "num_arcs": 101128,
+    "num_route_arcs": 1440,
+    "time_span_sec": 12377.0
+  },
+  {
+    "traj_id": "00000043",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 2322,
+    "num_nodes": 109070,
+    "num_arcs": 215620,
+    "num_route_arcs": 427,
+    "time_span_sec": 2642.0
+  },
+  {
+    "traj_id": "00000044",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 546,
+    "num_nodes": 4386,
+    "num_arcs": 9209,
+    "num_route_arcs": 130,
+    "time_span_sec": 980.0
+  },
+  {
+    "traj_id": "00000045",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 640,
+    "num_nodes": 2034,
+    "num_arcs": 4335,
+    "num_route_arcs": 59,
+    "time_span_sec": 639.0
+  },
+  {
+    "traj_id": "00000046",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 1401,
+    "num_nodes": 299,
+    "num_arcs": 649,
+    "num_route_arcs": 66,
+    "time_span_sec": 2300.0
+  },
+  {
+    "traj_id": "00000047",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 1272,
+    "num_nodes": 18388,
+    "num_arcs": 39747,
+    "num_route_arcs": 188,
+    "time_span_sec": 1271.0
+  },
+  {
+    "traj_id": "00000048",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 1240,
+    "num_nodes": 1308,
+    "num_arcs": 2592,
+    "num_route_arcs": 149,
+    "time_span_sec": 1242.0
+  },
+  {
+    "traj_id": "00000050",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 518,
+    "num_nodes": 2206,
+    "num_arcs": 4576,
+    "num_route_arcs": 94,
+    "time_span_sec": 517.0
+  },
+  {
+    "traj_id": "00000051",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 984,
+    "num_nodes": 4181,
+    "num_arcs": 8494,
+    "num_route_arcs": 299,
+    "time_span_sec": 989.0
+  },
+  {
+    "traj_id": "00000053",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 1304,
+    "num_nodes": 77905,
+    "num_arcs": 148707,
+    "num_route_arcs": 754,
+    "time_span_sec": 1319.0
+  },
+  {
+    "traj_id": "00000054",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 19313,
+    "num_nodes": 63822,
+    "num_arcs": 116916,
+    "num_route_arcs": 422,
+    "time_span_sec": 19523.0
+  },
+  {
+    "traj_id": "00000055",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 2472,
+    "num_nodes": 98511,
+    "num_arcs": 198961,
+    "num_route_arcs": 475,
+    "time_span_sec": 2658.0
+  },
+  {
+    "traj_id": "00000057",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 1645,
+    "num_nodes": 8929,
+    "num_arcs": 18777,
+    "num_route_arcs": 300,
+    "time_span_sec": 1669.0
+  },
+  {
+    "traj_id": "00000058",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 599,
+    "num_nodes": 22367,
+    "num_arcs": 39383,
+    "num_route_arcs": 345,
+    "time_span_sec": 741.0
+  },
+  {
+    "traj_id": "00000060",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 854,
+    "num_nodes": 15128,
+    "num_arcs": 30077,
+    "num_route_arcs": 520,
+    "time_span_sec": 1026.0
+  },
+  {
+    "traj_id": "00000061",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 1430,
+    "num_nodes": 4947,
+    "num_arcs": 10339,
+    "num_route_arcs": 296,
+    "time_span_sec": 1434.0
+  },
+  {
+    "traj_id": "00000062",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 3378,
+    "num_nodes": 30613,
+    "num_arcs": 62836,
+    "num_route_arcs": 497,
+    "time_span_sec": 3968.0
+  },
+  {
+    "traj_id": "00000063",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 2781,
+    "num_nodes": 2617,
+    "num_arcs": 5553,
+    "num_route_arcs": 565,
+    "time_span_sec": 2921.0
+  },
+  {
+    "traj_id": "00000064",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 2093,
+    "num_nodes": 28258,
+    "num_arcs": 56986,
+    "num_route_arcs": 692,
+    "time_span_sec": 2166.0
+  },
+  {
+    "traj_id": "00000066",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 4325,
+    "num_nodes": 9609,
+    "num_arcs": 20071,
+    "num_route_arcs": 365,
+    "time_span_sec": 4324.0
+  },
+  {
+    "traj_id": "00000068",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 747,
+    "num_nodes": 3537,
+    "num_arcs": 7058,
+    "num_route_arcs": 240,
+    "time_span_sec": 784.0
+  },
+  {
+    "traj_id": "00000069",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 2067,
+    "num_nodes": 8556,
+    "num_arcs": 17193,
+    "num_route_arcs": 467,
+    "time_span_sec": 5558.0
+  },
+  {
+    "traj_id": "00000070",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 2076,
+    "num_nodes": 1799,
+    "num_arcs": 3776,
+    "num_route_arcs": 149,
+    "time_span_sec": 2305.0
+  },
+  {
+    "traj_id": "00000071",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 850,
+    "num_nodes": 6265,
+    "num_arcs": 14868,
+    "num_route_arcs": 186,
+    "time_span_sec": 1175.2
+  },
+  {
+    "traj_id": "00000072",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 969,
+    "num_nodes": 3275,
+    "num_arcs": 7063,
+    "num_route_arcs": 131,
+    "time_span_sec": 968.0
+  },
+  {
+    "traj_id": "00000074",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 1929,
+    "num_nodes": 34654,
+    "num_arcs": 61055,
+    "num_route_arcs": 305,
+    "time_span_sec": 2129.0
+  },
+  {
+    "traj_id": "00000075",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 1628,
+    "num_nodes": 1022,
+    "num_arcs": 2124,
+    "num_route_arcs": 108,
+    "time_span_sec": 1637.0
+  },
+  {
+    "traj_id": "00000078",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 2909,
+    "num_nodes": 75230,
+    "num_arcs": 151458,
+    "num_route_arcs": 1765,
+    "time_span_sec": 57836.0
+  },
+  {
+    "traj_id": "00000079",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 689,
+    "num_nodes": 39031,
+    "num_arcs": 72116,
+    "num_route_arcs": 182,
+    "time_span_sec": 688.0
+  },
+  {
+    "traj_id": "00000080",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 2510,
+    "num_nodes": 10014,
+    "num_arcs": 18746,
+    "num_route_arcs": 139,
+    "time_span_sec": 2751.0
+  },
+  {
+    "traj_id": "00000081",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 3224,
+    "num_nodes": 2791,
+    "num_arcs": 5048,
+    "num_route_arcs": 778,
+    "time_span_sec": 8481.0
+  },
+  {
+    "traj_id": "00000082",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 4268,
+    "num_nodes": 15696,
+    "num_arcs": 31754,
+    "num_route_arcs": 204,
+    "time_span_sec": 4267.0
+  },
+  {
+    "traj_id": "00000083",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 1507,
+    "num_nodes": 12907,
+    "num_arcs": 25393,
+    "num_route_arcs": 143,
+    "time_span_sec": 1506.0
+  },
+  {
+    "traj_id": "00000084",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 16031,
+    "num_nodes": 24898,
+    "num_arcs": 50888,
+    "num_route_arcs": 627,
+    "time_span_sec": 16524.0
+  },
+  {
+    "traj_id": "00000085",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 1092,
+    "num_nodes": 690,
+    "num_arcs": 1554,
+    "num_route_arcs": 170,
+    "time_span_sec": 1333.0
+  },
+  {
+    "traj_id": "00000086",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 4143,
+    "num_nodes": 114868,
+    "num_arcs": 237656,
+    "num_route_arcs": 671,
+    "time_span_sec": 4142.0
+  },
+  {
+    "traj_id": "00000088",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 876,
+    "num_nodes": 11373,
+    "num_arcs": 24376,
+    "num_route_arcs": 163,
+    "time_span_sec": 1474.0
+  },
+  {
+    "traj_id": "00000089",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 1228,
+    "num_nodes": 15972,
+    "num_arcs": 32823,
+    "num_route_arcs": 265,
+    "time_span_sec": 2081.0
+  },
+  {
+    "traj_id": "00000090",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 536,
+    "num_nodes": 4010,
+    "num_arcs": 7942,
+    "num_route_arcs": 235,
+    "time_span_sec": 154030.0
+  },
+  {
+    "traj_id": "00000092",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 7892,
+    "num_nodes": 26468,
+    "num_arcs": 53348,
+    "num_route_arcs": 2266,
+    "time_span_sec": 7891.0
+  },
+  {
+    "traj_id": "00000093",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 1211,
+    "num_nodes": 45161,
+    "num_arcs": 85122,
+    "num_route_arcs": 590,
+    "time_span_sec": 1243.0
+  },
+  {
+    "traj_id": "00000095",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 1551,
+    "num_nodes": 1888,
+    "num_arcs": 3723,
+    "num_route_arcs": 306,
+    "time_span_sec": 1555.0
+  },
+  {
+    "traj_id": "00000096",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 3271,
+    "num_nodes": 16893,
+    "num_arcs": 32276,
+    "num_route_arcs": 456,
+    "time_span_sec": 3270.0
+  },
+  {
+    "traj_id": "00000097",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 1740,
+    "num_nodes": 23566,
+    "num_arcs": 48503,
+    "num_route_arcs": 444,
+    "time_span_sec": 1751.003
+  },
+  {
+    "traj_id": "00000098",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 5584,
+    "num_nodes": 43440,
+    "num_arcs": 88137,
+    "num_route_arcs": 1003,
+    "time_span_sec": 7194.0
+  },
+  {
+    "traj_id": "00000099",
+    "valid": true,
+    "issues": [],
+    "num_track_points": 2322,
+    "num_nodes": 34252,
+    "num_arcs": 72870,
+    "num_route_arcs": 886,
+    "time_span_sec": 2355.0
+  }
+]

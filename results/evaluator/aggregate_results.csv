@@ -1,0 +1,3 @@
+Metric Category,Point Accuracy (%),Top-1 ML Accuracy (%),HMM Improvement (%),Candidate Recall (%),Route F1-Score (%),Route Jaccard (%),Topological Connectivity (%),Avg Time / Traj (s)
+Macro (Trajectory Average),91.44,83.86,7.57,99.99,91.95,86.47,99.11,5.458
+"Pooled (All 19,674 Observations)",87.68,75.13,12.54,99.99,N/A (Set Metric),N/A (Set Metric),N/A (Sequence Metric),54.581
