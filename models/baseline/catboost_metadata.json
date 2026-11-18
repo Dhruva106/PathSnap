@@ -1,0 +1,50 @@
+{
+  "model_name": "Baseline CatBoost",
+  "algorithm": "CatBoost",
+  "model_type": "Categorical Gradient Boosted Decision Trees (CatBoost)",
+  "status": "baseline",
+  "training_dataset_info": "PathSnap 60 training trajectories (data/raw/train)",
+  "num_training_trajectories": 60,
+  "num_validation_trajectories": 20,
+  "num_training_instances": 1280935,
+  "num_validation_instances": 482577,
+  "selected_features": [
+    "dist_to_segment",
+    "dist_to_u",
+    "dist_to_v",
+    "dist_to_midpoint",
+    "arc_length",
+    "proj_ratio",
+    "speed",
+    "dist_rank",
+    "relative_dist",
+    "delta_x",
+    "delta_y",
+    "heading_cos",
+    "min_node_dist",
+    "node_asymmetry"
+  ],
+  "hyperparameters": {
+    "iterations": 100,
+    "depth": 6,
+    "learning_rate": 0.1,
+    "random_seed": 42,
+    "verbose": 0,
+    "thread_count": -1
+  },
+  "random_seed": 42,
+  "validation_metrics": {
+    "Accuracy": 0.9540612171736323,
+    "Precision": 0.8125301398488989,
+    "Recall": 0.7590142087580006,
+    "F1-Score": 0.7848609830656509,
+    "Macro F1": 0.879573068631545,
+    "Weighted F1": 0.9533725297553536,
+    "ROC-AUC": 0.9785410868619218,
+    "PR-AUC": 0.8694987187046289
+  },
+  "train_time_seconds": 2.2030439376831055,
+  "inference_time_seconds": 0.07102012634277344,
+  "timestamp_trained": "2026-11-18T12:46:24.781859",
+  "model_artifact_path": "models/baseline/catboost.joblib"
+}

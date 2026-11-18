@@ -1,0 +1,51 @@
+{
+  "model_name": "Baseline Linear SVM",
+  "algorithm": "Linear SVM",
+  "model_type": "Calibrated Linear Support Vector Machine (Platt Scaling)",
+  "status": "baseline",
+  "training_dataset_info": "PathSnap 60 training trajectories (data/raw/train)",
+  "num_training_trajectories": 60,
+  "num_validation_trajectories": 20,
+  "num_training_instances": 1280935,
+  "num_validation_instances": 482577,
+  "selected_features": [
+    "dist_to_segment",
+    "dist_to_u",
+    "dist_to_v",
+    "dist_to_midpoint",
+    "arc_length",
+    "proj_ratio",
+    "speed",
+    "dist_rank",
+    "relative_dist",
+    "delta_x",
+    "delta_y",
+    "heading_cos",
+    "min_node_dist",
+    "node_asymmetry"
+  ],
+  "hyperparameters": {
+    "scaler": "StandardScaler",
+    "calibration": "CalibratedClassifierCV(Platt Scaling)",
+    "estimator": "LinearSVC",
+    "C": 1.0,
+    "dual": false,
+    "max_iter": 2000,
+    "random_state": 42
+  },
+  "random_seed": 42,
+  "validation_metrics": {
+    "Accuracy": 0.9501592491975374,
+    "Precision": 0.7985249954033791,
+    "Recall": 0.7336561743341404,
+    "F1-Score": 0.7647173908790327,
+    "Macro F1": 0.8684224226566191,
+    "Weighted F1": 0.9492291688631381,
+    "ROC-AUC": 0.9644982992845942,
+    "PR-AUC": 0.8044033521613272
+  },
+  "train_time_seconds": 19.62683916091919,
+  "inference_time_seconds": 0.04899096488952637,
+  "timestamp_trained": "2026-11-18T12:45:39.691957",
+  "model_artifact_path": "models/baseline/linear_svm.joblib"
+}

@@ -1,0 +1,148 @@
+{
+  "schema_version": "1.0.0",
+  "num_features": 14,
+  "feature_order": [
+    "dist_to_segment",
+    "dist_to_u",
+    "dist_to_v",
+    "dist_to_midpoint",
+    "arc_length",
+    "proj_ratio",
+    "speed",
+    "dist_rank",
+    "relative_dist",
+    "delta_x",
+    "delta_y",
+    "heading_cos",
+    "min_node_dist",
+    "node_asymmetry"
+  ],
+  "features": {
+    "dist_to_segment": {
+      "index": 0,
+      "type": "float",
+      "dtype": "float64",
+      "unit": "meters",
+      "min_val": 0.0,
+      "max_val": 50.0,
+      "description": "Orthogonal Euclidean distance from GPS point to candidate road arc segment."
+    },
+    "dist_to_u": {
+      "index": 1,
+      "type": "float",
+      "dtype": "float64",
+      "unit": "meters",
+      "min_val": 0.0,
+      "max_val": null,
+      "description": "Euclidean distance from GPS point to incoming road junction node u."
+    },
+    "dist_to_v": {
+      "index": 2,
+      "type": "float",
+      "dtype": "float64",
+      "unit": "meters",
+      "min_val": 0.0,
+      "max_val": null,
+      "description": "Euclidean distance from GPS point to outgoing road junction node v."
+    },
+    "dist_to_midpoint": {
+      "index": 3,
+      "type": "float",
+      "dtype": "float64",
+      "unit": "meters",
+      "min_val": 0.0,
+      "max_val": null,
+      "description": "Euclidean distance from GPS point to the midpoint of the road arc segment."
+    },
+    "arc_length": {
+      "index": 4,
+      "type": "float",
+      "dtype": "float64",
+      "unit": "meters",
+      "min_val": 0.0,
+      "max_val": null,
+      "description": "Metric length of the candidate road arc segment."
+    },
+    "proj_ratio": {
+      "index": 5,
+      "type": "float",
+      "dtype": "float64",
+      "unit": "ratio",
+      "min_val": 0.0,
+      "max_val": 1.0,
+      "description": "Normalized scalar projection parameter t along segment (0.0 = node u, 1.0 = node v)."
+    },
+    "speed": {
+      "index": 6,
+      "type": "float",
+      "dtype": "float64",
+      "unit": "m/s",
+      "min_val": 0.0,
+      "max_val": null,
+      "description": "Instantaneous vehicular speed computed via causal backward differences."
+    },
+    "dist_rank": {
+      "index": 7,
+      "type": "integer",
+      "dtype": "int64",
+      "unit": "rank",
+      "min_val": 1,
+      "max_val": 25,
+      "description": "Proximity rank order among all generated candidate arcs for the GPS point."
+    },
+    "relative_dist": {
+      "index": 8,
+      "type": "float",
+      "dtype": "float64",
+      "unit": "ratio",
+      "min_val": 1.0,
+      "max_val": null,
+      "description": "Ratio of candidate orthogonal distance to the nearest candidate arc distance."
+    },
+    "delta_x": {
+      "index": 9,
+      "type": "float",
+      "dtype": "float64",
+      "unit": "meters",
+      "min_val": null,
+      "max_val": null,
+      "description": "Signed residual along the local tangent plane East-West axis (x_gps - x_proj)."
+    },
+    "delta_y": {
+      "index": 10,
+      "type": "float",
+      "dtype": "float64",
+      "unit": "meters",
+      "min_val": null,
+      "max_val": null,
+      "description": "Signed residual along the local tangent plane North-South axis (y_gps - y_proj)."
+    },
+    "heading_cos": {
+      "index": 11,
+      "type": "float",
+      "dtype": "float64",
+      "unit": "ratio",
+      "min_val": -1.0,
+      "max_val": 1.0,
+      "description": "Cosine of angular difference between travel heading and directed road arc azimuth."
+    },
+    "min_node_dist": {
+      "index": 12,
+      "type": "float",
+      "dtype": "float64",
+      "unit": "meters",
+      "min_val": 0.0,
+      "max_val": null,
+      "description": "Minimum distance to either endpoint node min(dist_to_u, dist_to_v)."
+    },
+    "node_asymmetry": {
+      "index": 13,
+      "type": "float",
+      "dtype": "float64",
+      "unit": "meters",
+      "min_val": 0.0,
+      "max_val": null,
+      "description": "Absolute difference between distance to entry node and distance to exit node."
+    }
+  }
+}

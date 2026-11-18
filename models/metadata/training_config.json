@@ -1,0 +1,56 @@
+{
+  "dataset": {
+    "raw_train_path": "data/raw/train",
+    "total_trajectories": 80,
+    "total_gps_observations": 208417,
+    "total_candidate_pairs": 1763512,
+    "train_split_trajectories": 60,
+    "val_split_trajectories": 20,
+    "train_instances": 1280935,
+    "val_instances": 482577,
+    "positive_class_ratio": 0.1059,
+    "split_strategy": "GroupShuffleSplit (grouped by trajectory_id)",
+    "split_random_state": 42
+  },
+  "feature_selection": {
+    "initial_candidate_features": 17,
+    "variance_threshold": 0.001,
+    "collinearity_correlation_threshold": 0.85,
+    "final_selected_features": 14,
+    "pruned_features": [
+      "dist_sq",
+      "log_dist",
+      "heading_diff_deg"
+    ]
+  },
+  "champion_model": {
+    "algorithm": "XGBoost",
+    "model_name": "Baseline XGBoost",
+    "status": "champion",
+    "hyperparameters": {
+      "n_estimators": 100,
+      "max_depth": 6,
+      "learning_rate": 0.1,
+      "subsample": 0.8,
+      "colsample_bytree": 0.8,
+      "random_state": 42,
+      "n_jobs": -1,
+      "eval_metric": "logloss"
+    },
+    "validation_metrics": {
+      "Accuracy": 0.954188,
+      "Precision": 0.804760,
+      "Recall": 0.772435,
+      "F1-Score": 0.788266,
+      "ROC-AUC": 0.979047,
+      "PR-AUC": 0.869304
+    }
+  },
+  "optimization": {
+    "framework": "Optuna TPESampler",
+    "num_trials": 25,
+    "cross_validation": "3-Fold GroupKFold (grouped by trajectory_id)",
+    "nested_feature_selection": true,
+    "retention_decision": "Baseline XGBoost strictly retained because optimized model achieved F1 = 0.7863 (< baseline 0.7883)"
+  }
+}

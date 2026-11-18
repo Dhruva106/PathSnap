@@ -1,0 +1,48 @@
+{
+  "model_name": "Baseline Logistic Regression",
+  "algorithm": "Logistic Regression",
+  "model_type": "Logistic Regression Pipeline with StandardScaler",
+  "status": "baseline",
+  "training_dataset_info": "PathSnap 60 training trajectories (data/raw/train)",
+  "num_training_trajectories": 60,
+  "num_validation_trajectories": 20,
+  "num_training_instances": 1280935,
+  "num_validation_instances": 482577,
+  "selected_features": [
+    "dist_to_segment",
+    "dist_to_u",
+    "dist_to_v",
+    "dist_to_midpoint",
+    "arc_length",
+    "proj_ratio",
+    "speed",
+    "dist_rank",
+    "relative_dist",
+    "delta_x",
+    "delta_y",
+    "heading_cos",
+    "min_node_dist",
+    "node_asymmetry"
+  ],
+  "hyperparameters": {
+    "scaler": "StandardScaler",
+    "C": 1.0,
+    "max_iter": 1000,
+    "random_state": 42
+  },
+  "random_seed": 42,
+  "validation_metrics": {
+    "Accuracy": 0.9513486966846741,
+    "Precision": 0.8047244094488188,
+    "Recall": 0.7385363289975037,
+    "F1-Score": 0.7702110167169087,
+    "Macro F1": 0.871502675390907,
+    "Weighted F1": 0.95042892626812,
+    "ROC-AUC": 0.9647210634051925,
+    "PR-AUC": 0.8004092241975027
+  },
+  "train_time_seconds": 2.326974868774414,
+  "inference_time_seconds": 0.04825878143310547,
+  "timestamp_trained": "2026-11-18T12:45:19.569869",
+  "model_artifact_path": "models/baseline/logistic_regression.joblib"
+}

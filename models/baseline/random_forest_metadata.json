@@ -1,0 +1,49 @@
+{
+  "model_name": "Baseline Random Forest",
+  "algorithm": "Random Forest",
+  "model_type": "Random Forest Classifier (Ensemble Bagging Trees)",
+  "status": "baseline",
+  "training_dataset_info": "PathSnap 60 training trajectories (data/raw/train)",
+  "num_training_trajectories": 60,
+  "num_validation_trajectories": 20,
+  "num_training_instances": 1280935,
+  "num_validation_instances": 482577,
+  "selected_features": [
+    "dist_to_segment",
+    "dist_to_u",
+    "dist_to_v",
+    "dist_to_midpoint",
+    "arc_length",
+    "proj_ratio",
+    "speed",
+    "dist_rank",
+    "relative_dist",
+    "delta_x",
+    "delta_y",
+    "heading_cos",
+    "min_node_dist",
+    "node_asymmetry"
+  ],
+  "hyperparameters": {
+    "n_estimators": 100,
+    "max_depth": 12,
+    "min_samples_split": 5,
+    "random_state": 42,
+    "n_jobs": -1
+  },
+  "random_seed": 42,
+  "validation_metrics": {
+    "Accuracy": 0.9543906982719856,
+    "Precision": 0.8228661118109911,
+    "Recall": 0.7478649323347786,
+    "F1-Score": 0.7835748982280871,
+    "Macro F1": 0.8790421557812044,
+    "Weighted F1": 0.9534300453550875,
+    "ROC-AUC": 0.9777342976056895,
+    "PR-AUC": 0.8681570802587238
+  },
+  "train_time_seconds": 39.438517808914185,
+  "inference_time_seconds": 0.2240438461303711,
+  "timestamp_trained": "2026-11-18T12:46:19.906116",
+  "model_artifact_path": "models/baseline/random_forest.joblib"
+}

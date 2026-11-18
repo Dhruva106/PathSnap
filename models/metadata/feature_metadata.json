@@ -1,0 +1,191 @@
+{
+  "project": "PathSnap",
+  "version": "1.0.0",
+  "selection_method": "Multi-stage leakage-free selection (Variance Threshold -> Collinearity Pruning -> Random Forest Gini / Mutual Information Ranking)",
+  "fit_dataset": "60 Training Trajectories (1,280,935 rows)",
+  "selected_features_count": 14,
+  "pruned_features_count": 3,
+  "total_candidate_pool": 17,
+  "selected_features": [
+    {
+      "name": "heading_cos",
+      "dtype": "float64",
+      "unit": "dimensionless ratio",
+      "range": "[-1.0, 1.0]",
+      "formula": "cos(theta_gps - theta_arc)",
+      "description": "Cosine of the angular difference between the vehicle's instantaneous travel heading and the directed road arc bearing.",
+      "importance_rf_gini": 0.236118,
+      "mutual_information": 0.035930,
+      "role": "Top discriminatory directional signal. Strongly penalizes road segments running perpendicular or opposite to the vehicle movement direction."
+    },
+    {
+      "name": "relative_dist",
+      "dtype": "float64",
+      "unit": "dimensionless ratio",
+      "range": "[1.0, inf)",
+      "formula": "dist_to_segment / max(min_dist_for_point, 0.1)",
+      "description": "Normalized ratio of the candidate's orthogonal distance relative to the nearest candidate arc for the same GPS point.",
+      "importance_rf_gini": 0.190884,
+      "mutual_information": 0.130300,
+      "role": "Encodes candidate competitiveness locally, ensuring candidate ranking remains scale-invariant across wide boulevards and narrow alleys."
+    },
+    {
+      "name": "dist_rank",
+      "dtype": "int64",
+      "unit": "ordinal rank",
+      "range": "[1, 25]",
+      "formula": "rank(dist_to_segment) ascending per GPS point",
+      "description": "Discrete rank order of the candidate arc sorted ascendingly by orthogonal distance among all candidates for the given GPS point.",
+      "importance_rf_gini": 0.169733,
+      "mutual_information": 0.133096,
+      "role": "Rank 1 contains the true road arc in >90% of observations; strongly guides tree split decisions."
+    },
+    {
+      "name": "dist_to_segment",
+      "dtype": "float64",
+      "unit": "meters",
+      "range": "[0.0, 50.0]",
+      "formula": "||p - proj_{[u, v]}(p)||",
+      "description": "Exact continuous Euclidean orthogonal distance from the GPS point to the line segment connecting start node u and end node v.",
+      "importance_rf_gini": 0.126889,
+      "mutual_information": 0.109155,
+      "role": "Foundational spatial proximity feature reflecting Gaussian GPS sensor noise."
+    },
+    {
+      "name": "arc_length",
+      "dtype": "float64",
+      "unit": "meters",
+      "range": "(0.0, inf)",
+      "formula": "||v - u||",
+      "description": "Physical metric length of the candidate road arc segment.",
+      "importance_rf_gini": 0.048010,
+      "mutual_information": 0.067151,
+      "role": "Provides prior probability weighting: longer road segments span more sequential GPS observation intervals."
+    },
+    {
+      "name": "proj_ratio",
+      "dtype": "float64",
+      "unit": "dimensionless parameter",
+      "range": "[0.0, 1.0]",
+      "formula": "clip(((p - u) . (v - u)) / ||v - u||^2, 0.0, 1.0)",
+      "description": "Normalized longitudinal projection ratio indicating where along segment [u, v] the orthogonal projection falls (0.0 = node u, 1.0 = node v).",
+      "importance_rf_gini": 0.046395,
+      "mutual_information": 0.113878,
+      "role": "Distinguishes observations centered along an arc from those near junction endpoints."
+    },
+    {
+      "name": "speed",
+      "dtype": "float64",
+      "unit": "meters/second",
+      "range": "[0.0, inf)",
+      "formula": "||p_t - p_{t-1}|| / max(t_t - t_{t-1}, 10^-6)",
+      "description": "Instantaneous vehicular speed computed using causal backward differences.",
+      "importance_rf_gini": 0.034982,
+      "mutual_information": 0.004057,
+      "role": "Interacts with heading reliability; at higher speeds, heading angles are significantly more reliable."
+    },
+    {
+      "name": "min_node_dist",
+      "dtype": "float64",
+      "unit": "meters",
+      "range": "[0.0, inf)",
+      "formula": "min(||p - u||, ||p - v||)",
+      "description": "Minimum Euclidean distance from the GPS point to either the entry node u or exit node v.",
+      "importance_rf_gini": 0.031137,
+      "mutual_information": 0.032972,
+      "role": "Detects road network intersection proximity."
+    },
+    {
+      "name": "delta_x",
+      "dtype": "float64",
+      "unit": "meters",
+      "range": "(-inf, inf)",
+      "formula": "x_gps - x_proj",
+      "description": "Signed metric projection residual along the local tangent plane East-West axis.",
+      "importance_rf_gini": 0.024678,
+      "mutual_information": 0.081793,
+      "role": "Encodes directional coordinate bias and lateral lane offset."
+    },
+    {
+      "name": "dist_to_midpoint",
+      "dtype": "float64",
+      "unit": "meters",
+      "range": "[0.0, inf)",
+      "formula": "||p - 0.5 * (u + v)||",
+      "description": "Euclidean distance from the GPS point to the geometric midpoint of the candidate road arc.",
+      "importance_rf_gini": 0.024592,
+      "mutual_information": 0.036485,
+      "role": "Auxiliary spatial centrality measure."
+    },
+    {
+      "name": "delta_y",
+      "dtype": "float64",
+      "unit": "meters",
+      "range": "(-inf, inf)",
+      "formula": "y_gps - y_proj",
+      "description": "Signed metric projection residual along the local tangent plane North-South axis.",
+      "importance_rf_gini": 0.019568,
+      "mutual_information": 0.093244,
+      "role": "Encodes directional coordinate bias and longitudinal lane offset."
+    },
+    {
+      "name": "dist_to_v",
+      "dtype": "float64",
+      "unit": "meters",
+      "range": "[0.0, inf)",
+      "formula": "||p - v||",
+      "description": "Euclidean distance from the GPS point to the outgoing road junction node v.",
+      "importance_rf_gini": 0.018943,
+      "mutual_information": 0.020514,
+      "role": "Captures vehicle progression toward road arc exit."
+    },
+    {
+      "name": "dist_to_u",
+      "dtype": "float64",
+      "unit": "meters",
+      "range": "[0.0, inf)",
+      "formula": "||p - u||",
+      "description": "Euclidean distance from the GPS point to the incoming road junction node u.",
+      "importance_rf_gini": 0.016743,
+      "mutual_information": 0.020037,
+      "role": "Captures vehicle entry progression into road arc."
+    },
+    {
+      "name": "node_asymmetry",
+      "dtype": "float64",
+      "unit": "meters",
+      "range": "[0.0, inf)",
+      "formula": "|||p - u|| - ||p - v|||",
+      "description": "Absolute difference between the distance to the entry node and the distance to the exit node.",
+      "importance_rf_gini": 0.011328,
+      "mutual_information": 0.007776,
+      "role": "Indicates relative longitudinal symmetry along the road arc."
+    }
+  ],
+  "pruned_features": [
+    {
+      "name": "dist_sq",
+      "dtype": "float64",
+      "unit": "meters^2",
+      "formula": "dist_to_segment^2",
+      "pruned_reason": "High collinearity with 'dist_to_segment' (|r| = 0.869 >= 0.85); 'dist_to_segment' retained due to higher Mutual Information score.",
+      "status": "pruned"
+    },
+    {
+      "name": "log_dist",
+      "dtype": "float64",
+      "unit": "log-meters",
+      "formula": "ln(1 + dist_to_segment)",
+      "pruned_reason": "High collinearity with 'dist_to_segment' (|r| = 0.868 >= 0.85); 'dist_to_segment' retained due to higher Mutual Information score.",
+      "status": "pruned"
+    },
+    {
+      "name": "heading_diff_deg",
+      "dtype": "float64",
+      "unit": "degrees",
+      "formula": "angular_diff(theta_gps, theta_arc) in [0, 180]",
+      "pruned_reason": "High collinearity with 'heading_cos' (|r| = 0.993 >= 0.85); 'heading_cos' retained due to higher Mutual Information score.",
+      "status": "pruned"
+    }
+  ]
+}

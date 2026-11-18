@@ -1,0 +1,25 @@
+{
+  "projection": {
+    "type": "Equirectangular Equidistant Local Tangent Plane",
+    "datum": "WGS84",
+    "earth_radius_meters": 6371000.0,
+    "origin_strategy": "Trajectory initial observation (lat0, lon0)",
+    "distortion_bound": "< 0.05 meters error across urban bounding box (< 15 km span)"
+  },
+  "kinematics": {
+    "mode": "backward",
+    "stationary_speed_threshold_m_per_s": 0.5,
+    "min_time_delta_seconds": 1e-06,
+    "heading_smoothing": "Forward persistence during stationary intervals (speed < 0.5 m/s)"
+  },
+  "candidate_generation": {
+    "spatial_index": "SegmentSpatialIndex via scipy.spatial.cKDTree",
+    "arc_discretization_step_meters": 35.0,
+    "exact_search_radius_meters": 50.0,
+    "kdtree_query_ball_radius_meters": 67.5,
+    "max_candidates_per_point": 25,
+    "sorting_metric": "Exact continuous orthogonal Euclidean distance",
+    "fallback_strategy": "Nearest 3 segments retained when 0 segments fall within 50 meters",
+    "ground_truth_injection": "STRICTLY FORBIDDEN (Zero GT access during inference)"
+  }
+}
