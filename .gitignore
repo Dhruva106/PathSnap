@@ -47,3 +47,25 @@ visualizations/*
 # Frontend dependencies
 frontend/node_modules/
 frontend/dist/
+
+# Dataset - do not push
+data/raw/
+data/processed/
+data/interim/
+
+# Model artifacts
+models/*.pkl
+models/*.joblib
+models/*.pt
+models/*.h5
+
+# Generated outputs
+results/*
+visualizations/*
+!results/.gitkeep
+!visualizations/.gitkeep
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
